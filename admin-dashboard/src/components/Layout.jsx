@@ -1,14 +1,22 @@
 import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom'; // 1. Added useNavigate here
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 
 export default function Layout() {
-  const navigate = useNavigate(); // 2. Initialized the navigation hook
+  const navigate = useNavigate();
 
-  // 3. Added the logout function to clear storage and redirect
+  // 🔥 1. Get the logged-in admin's email from storage
+  const currentAdminEmail = localStorage.getItem('adminEmail');
+  
+  // 🔥 2. Define the main super admin
+  const MAIN_ADMIN_EMAIL = import.meta.env.VITE_SUPER_ADMIN_EMAIL;
+  
+  // 🔥 3. Check if the current user is the main admin
+  const isMainAdmin = currentAdminEmail === MAIN_ADMIN_EMAIL;
+
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminEmail');
-    navigate('/login'); // Sends the user back to the login screen
+    navigate('/login'); 
   };
 
   return (
@@ -26,8 +34,10 @@ export default function Layout() {
           <Link to="/products" className="block p-3 rounded hover:bg-green-700 transition">📦 Products</Link>
           <Link to="/customers" className="block p-3 rounded hover:bg-green-700 transition">👥 Customers</Link>
           
-          {/* Create Admin Link */}
-          <Link to="/create-admin" className="block p-3 rounded hover:bg-green-700 transition">🔑 Manage Admins</Link>
+          {/* 🔥 4. CONDITIONAL RENDER: Only show if it is the Main Admin */}
+          {isMainAdmin && (
+            <Link to="/create-admin" className="block p-3 rounded hover:bg-green-700 transition">🔑 Manage Admins</Link>
+          )}
         </nav>
       </div>
 
@@ -41,13 +51,17 @@ export default function Layout() {
           {/* Profile & Logout Container */}
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-3">
-              <span className="text-gray-600 font-medium">Admin</span>
-              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                A
+              
+              {/* 🔥 5. Dynamically show the logged-in email and their initial */}
+              <span className="text-gray-600 font-medium">
+                {currentAdminEmail || 'Admin'}
+              </span>
+              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold uppercase">
+                {currentAdminEmail ? currentAdminEmail[0] : 'A'}
               </div>
+
             </div>
             
-            {/* 4. Added Logout Button */}
             <button 
               onClick={handleLogout}
               className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg transition border border-red-100"
