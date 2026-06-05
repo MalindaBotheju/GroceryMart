@@ -5,7 +5,7 @@ import axios from 'axios';
 import BackgroundWrapper from '../components/BackgroundWrapper'; 
 
 // Make sure to pass the API URL matching your network IP
-const API_URL = 'http://10.29.171.206:5000/api/auth'; 
+const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/auth`; 
 
 export default function VerifyOtpScreen({ route, navigation }) {
   // We expect the email to be passed from the previous screen

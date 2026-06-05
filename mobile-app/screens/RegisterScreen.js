@@ -60,7 +60,7 @@ export default function RegisterScreen({ navigation }) {
 
     try {
       // NOTE: Later, this API will send the OTP email instead of just creating the account instantly!
-      const response = await axios.post('http://10.29.171.206:5000/api/auth/register', {
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/register`, {
         name,
         email,
         password

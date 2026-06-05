@@ -14,8 +14,8 @@ export default function CreateAdmin() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      
-      const res = await axios.post('http://localhost:5000/api/admin/create', 
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const res = await axios.post(`${API_BASE_URL}/api/admin/create`, 
         { newAdminEmail: email, newAdminPassword: password },
         { headers: { Authorization: `Bearer ${token}` } }
       );

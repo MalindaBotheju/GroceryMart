@@ -9,7 +9,8 @@ export default function Customers() {
   const fetchCustomers = async () => {
     try {
       const token = localStorage.getItem('adminToken'); // 🔥 ADDED THIS
-      const res = await axios.get('http://localhost:5000/api/customers', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const res = await axios.get(`${API_BASE_URL}/api/customers`, {
         headers: { Authorization: `Bearer ${token}` } // 🔥 ADDED THIS
       });
       setCustomers(res.data);
@@ -28,8 +29,9 @@ export default function Customers() {
 
     try {
       const token = localStorage.getItem('adminToken'); // 🔥 ADDED THIS
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       // Note the empty {} as the second argument for the body payload
-      await axios.put(`http://localhost:5000/api/customers/${id}/suspend`, {}, {
+      await axios.put(`${API_BASE_URL}/api/customers/${id}/suspend`, {}, {
         headers: { Authorization: `Bearer ${token}` } // 🔥 ADDED THIS
       });
       fetchCustomers(); // Refresh the list from the database

@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function Overview() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h1>

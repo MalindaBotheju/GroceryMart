@@ -16,7 +16,8 @@ export default function AdminLogin() {
 
     try {
       // Points exactly to your new isolated admin route
-      const response = await axios.post('http://localhost:5000/api/admin/auth/login', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const response = await axios.post(`${API_BASE_URL}/api/admin/auth/login`, {
         email,
         password,
       });

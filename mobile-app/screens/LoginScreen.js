@@ -52,7 +52,7 @@ export default function LoginScreen({ navigation }) {
     if (!validateInputs()) return; 
 
     try {
-      const response = await axios.post('http://10.29.171.206:5000/api/auth/login', {
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/api/auth/login`, {
         email,
         password
       });

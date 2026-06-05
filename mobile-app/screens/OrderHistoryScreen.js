@@ -24,7 +24,7 @@ export default function OrderHistoryScreen({ navigation }) {
   const fetchOrders = async () => {
     try {
       // Remember to match your computer's IP address!
-      const response = await axios.get(`http://10.29.171.206:5000/api/orders/${user.email}`);
+      const response = await axios.get(`${process.env.EXPO_PUBLIC_API_URL}/api/orders/${user.email}`);
       setOrders(response.data);
     } catch (error) {
       console.error("Error fetching orders:", error);

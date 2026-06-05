@@ -34,10 +34,10 @@ export default function Products() {
     try {
       const token = localStorage.getItem('adminToken');
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       const [prodRes, catRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/products', config),
-        axios.get('http://localhost:5000/api/categories', config)
+        axios.get(`${API_BASE_URL}/api/products`, config),
+        axios.get(`${API_BASE_URL}/api/categories`, config)
       ]);
       setProducts(prodRes.data);
       setCategories(catRes.data);
@@ -59,7 +59,8 @@ export default function Products() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.post('http://localhost:5000/api/products', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      await axios.post(`${API_BASE_URL}/api/products`, {
         name,
         description,
         quantity_amount: parseFloat(quantityAmount),
@@ -88,7 +89,8 @@ export default function Products() {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.delete(`http://localhost:5000/api/products/${id}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      await axios.delete(`${API_BASE_URL}/api/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchData();
@@ -113,7 +115,8 @@ export default function Products() {
   const handleSaveEdit = async (id) => {
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put(`http://localhost:5000/api/products/${id}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      await axios.put(`${API_BASE_URL}/api/products/${id}`, {
         name: editName,
         description: editDescription,
         quantity_amount: parseFloat(editQuantityAmount),

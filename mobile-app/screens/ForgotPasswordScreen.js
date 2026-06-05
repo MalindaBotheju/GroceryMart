@@ -5,7 +5,7 @@ import axios from 'axios';
 import BackgroundWrapper from '../components/BackgroundWrapper'; 
 
 // Using your local network IP matching your other screens
-const API_URL = 'http://10.29.171.206:5000/api/auth'; 
+const API_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/auth`; 
 
 export default function ForgotPasswordScreen({ navigation }) {
   const [email, setEmail] = useState('');

@@ -9,7 +9,8 @@ export default function Orders() {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('adminToken'); // 🔥 ADDED THIS
-      const response = await axios.get('http://localhost:5000/api/admin/orders', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // 🔥 ADDED THIS
+      const response = await axios.get(`${API_BASE_URL}/api/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` } // 🔥 ADDED THIS
       });
       setOrders(response.data);
@@ -28,7 +29,8 @@ export default function Orders() {
   const handleMarkDelivered = async (orderId) => {
     try {
       const token = localStorage.getItem('adminToken'); // 🔥 ADDED THIS
-      await axios.put(`http://localhost:5000/api/admin/orders/${orderId}/status`, {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // 🔥 ADDED THIS
+      await axios.put(`${API_BASE_URL}/api/admin/orders/${orderId}/status`, {
         status: 'delivered'
       }, {
         headers: { Authorization: `Bearer ${token}` } // 🔥 ADDED THIS

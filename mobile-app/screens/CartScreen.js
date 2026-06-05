@@ -30,7 +30,7 @@ export default function CartScreen({ navigation }) {
       const totalAmount = calculateTotal();
       
       // IMPORTANT: Check your IP!
-      const response = await axios.post('http://10.29.171.206:5000/api/payments/checkout', {
+      const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/api/payments/checkout`, {
         userEmail: user ? user.email : 'guest@test.com',
         userName: user ? user.name : 'Guest',
         totalPrice: totalAmount
@@ -81,7 +81,7 @@ export default function CartScreen({ navigation }) {
       
       try {
         // IMPORTANT: Check your IP!
-        await axios.post('http://10.29.171.206:5000/api/orders', { 
+        await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/api/orders`, { 
           email: user ? user.email : 'guest@test.com', 
           cartItems: cart,
           totalAmount: calculateTotal()
@@ -182,29 +182,29 @@ export default function CartScreen({ navigation }) {
             </View>
 
             {paymentParams && (
-              <WebView
-                source={{ 
-                  html: generatePayHereHTML(paymentParams),
-                  // --- THE MAGIC FIX: Use PayHere's URL as the base ---
-                  baseUrl: 'https://grocerymart.com' 
-                }}
-                onNavigationStateChange={handleNavigationStateChange}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                thirdPartyCookiesEnabled={true} 
-                mixedContentMode="always"       
-                originWhitelist={['*']}         
-                userAgent="Mozilla/5.0 (Linux; Android 10; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36"
-                javaScriptCanOpenWindowsAutomatically={true}
-                setSupportMultipleWindows={false} 
-                startInLoadingState={true}
-                renderLoading={() => (
-                  <View style={styles.webviewLoader}>
-                    <ActivityIndicator size="large" color="#4CAF50" />
-                  </View>
-                )}
-              />
-            )}
+            <WebView
+              source={{ 
+                uri: 'https://sandbox.payhere.lk/pay/checkout',
+                method: 'POST',
+                // ⚡ Content-Type header removed; WebView handles this automatically for POST bodies
+                body: Object.keys(paymentParams)
+                  .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(paymentParams[key]))
+                  .join('&')
+              }}
+              onNavigationStateChange={handleNavigationStateChange}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              thirdPartyCookiesEnabled={true} 
+              mixedContentMode="always"       
+              originWhitelist={['*']}         
+              startInLoadingState={true}
+              renderLoading={() => (
+                <View style={styles.webviewLoader}>
+                  <ActivityIndicator size="large" color="#4CAF50" />
+                </View>
+              )}
+            />
+          )}
           </View>
         </Modal>
       </View>

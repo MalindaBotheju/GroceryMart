@@ -11,7 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+// 🔥 Restrict CORS to your local development and live production URLs
+app.use(cors({
+  origin: [process.env.FRONTEND_URL, 'http://localhost:5173']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 
@@ -20,26 +23,6 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
-
-// --- AUTO-SEED DEFAULT ADMIN ---
-const seedDefaultAdmin = async () => {
-  try {
-    const result = await pool.query('SELECT COUNT(*) FROM admins');
-    if (parseInt(result.rows[0].count) === 0) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('admin123', salt); 
-      
-      await pool.query(
-        'INSERT INTO admins (email, password) VALUES ($1, $2)',
-        ['admin@grocerymart.com', hashedPassword]
-      );
-      console.log('✅ Default admin account created: admin@grocerymart.com / admin123');
-    }
-  } catch (err) {
-    console.error('Error seeding default admin. Did you create the admins table in Neon?', err.message);
-  }
-};
-seedDefaultAdmin();
 
 // Set up Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -363,8 +346,10 @@ app.post('/api/payments/checkout', (req, res) => {
   const hash = crypto.createHash('md5').update(string_to_hash).digest('hex').toUpperCase();
 
   res.json({
-    merchant_id, return_url: 'https://grocerymart.com/success', cancel_url: 'https://grocerymart.com/cancel',  
-    notify_url: 'https://thatcher-seedless-astrologically.ngrok-free.dev/api/payments/notify', 
+    merchant_id, 
+    return_url: "https://grocerymart.com/success",
+    cancel_url: "https://grocerymart.com/cancel",  
+    notify_url: "https://grocerymart.com/notify", 
     first_name: userName ? userName.split(' ')[0] : 'Guest', last_name: userName && userName.split(' ')[1] ? userName.split(' ')[1] : 'User',
     email: userEmail || 'guest@test.com', phone: '0771234567', address: '123 Grocery Lane', city: 'Colombo', country: 'Sri Lanka',
     order_id, items: 'Grocery Items Order', currency, amount, hash

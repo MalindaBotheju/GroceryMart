@@ -17,7 +17,8 @@ export default function Categories() {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await axios.get('http://localhost:5000/api/categories', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+      const response = await axios.get(`${API_BASE_URL}/api/categories`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCategories(response.data);
@@ -37,7 +38,7 @@ export default function Categories() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.post('http://localhost:5000/api/categories', {
+      await axios.post(`${API_BASE_URL}/api/categories`, {
         name: newCatName,
         image_url: newCatImage
       }, {
@@ -58,7 +59,7 @@ export default function Categories() {
     
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.delete(`http://localhost:5000/api/categories/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/categories/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchCategories();
@@ -86,7 +87,7 @@ export default function Categories() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put(`http://localhost:5000/api/categories/${id}`, {
+      await axios.put(`${API_BASE_URL}/api/categories/${id}`, {
         name: editCatName,
         image_url: editCatImage
       }, {
